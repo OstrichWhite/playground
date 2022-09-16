@@ -19,20 +19,22 @@ const studentResults=map(students,(student)=>{
   };
 })
 
-const passStatistics=sort(filter(studentResults,e=>e.result==='pass'),(a,b)=>b.total-a.total)
-const failStatistics=filter(studentResults,e=>e.result==='fail');
+const passedStudents=sort(filter(studentResults,e=>e.result==='pass'),(a,b)=>b.total-a.total)
+const failedStudents=filter(studentResults,e=>e.result==='fail');
 
-let rank=1,check=0, count=1;
-map(passStatistics,(e,i)=>{ 
-    if(check!=e.total){
-      check=e.total;
-      rank=count;
-    }
-    e.rank=rank;
-    count++;
-  });
+const {rankedStudents} = reduce(passedStudents,(acc,student,i)=>{ 
+  const {rank,check,count,rankedStudents} =acc;
+  const {total} = student;
+  const updatedRank=check!=total?count:rank;
 
-let studentStatistics=[];
-combine(studentStatistics,passStatistics,failStatistics);
-console.table(studentStatistics);
-console.log(`passed count ${passStatistics.length} failed count ${failStatistics.length}`);
+    return {
+      ...acc,
+      check:check!=total?total:check,
+      count:count+1,
+      rank:updatedRank,
+      rankedStudents:[...rankedStudents,{...student,rank:updatedRank}],
+    };
+  },{rank:1,check:0,count:1,rankedStudents:[]});
+
+console.table(rankedStudents.concat(failedStudents));
+console.log(`passed count ${passedStudents.length} failed count ${failedStudents.length}`);
