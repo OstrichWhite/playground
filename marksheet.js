@@ -5,18 +5,6 @@ const data=[
   {name:'umar',rollno:4,subjects:{maths:34,science:88,language:98}},
 ]
 
-// const data=[
-//   {name:'Sriram',rollno:1,subjects:{language:'90',maths: '80',science: '33'}},
-//   {name:'ashiq',rollno:1,subjects:{language:'90',maths: '80',science: '33'}},
-//   {name:'Mani',rollno:1,subjects:{language:'60',maths: '70',science: '46'}},
-//   {name:'Kishore',rollno:1,subjects:{language:'60',maths: '70',science: '46'}},
-//   {name:'sai',rollno:1,subjects:{language:'70',maths: '70',science: '75'}},
-//   {name:'abdul',rollno:1,subjects:{language:'60',maths: '70',science: '46'}},
-//   {name:'kabeer',rollno:1,subjects:{language:'70',maths: '70',science: '75'}},
-//   {name:'umar',rollno:1,subjects:{language:'70',maths: '70',science: '75'}},
-//   {name:'nithis',rollno:1,subjects:{language:'35',maths: '35',science: '35'}}
-// ]
-
 const {collection}= require('@laufire/utils');
 
 let statistics=[];
@@ -47,7 +35,6 @@ collection.map(passStatistics,(e,i)=>{
 
 let studentStatistics=[]
 collection.combine(studentStatistics,passStatistics,failStatistics)
-// studentStatistics =collection.sort(studentStatistics,(a,b)=>a.rollno-b.rollno) //sort by rollno
 console.table(studentStatistics)
 console.log(`passed count ${passStatistics.length} failed count ${failStatistics.length}`)
 
