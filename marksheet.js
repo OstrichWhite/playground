@@ -1,4 +1,5 @@
-const { values,reduce,map,filter,sort } = require('@laufire/utils/collection');
+const { values,reduce,map,count,sort } = require('@laufire/utils/collection');
+const { index } = require('@laufire/utils/crunch');
 
 const students=[
   {name:'rahim',rollno:1,subjects:{maths:40,science:78,language:98}},
@@ -23,11 +24,10 @@ const assignResult = (students)=>
 
 const generateMarksheet = (students)=>{
   const studentResults= assignResult(students);
-  
-  const passedStudents=sort(filter(studentResults,e=>e.result==='pass'),(a,b)=>b.total-a.total)
-  const failedStudents=filter(studentResults,e=>e.result==='fail');
-  
-  const {rankedStudents} = reduce(passedStudents,(acc,student,i)=>{ 
+  const {pass:passedStudents,fail:failedStudents}=index(studentResults,['result']);
+  const sortedStudents=sort(passedStudents,(a,b)=>b.total-a.total);
+
+  const {rankedStudents} = reduce(sortedStudents,(acc,student,i)=>{ 
     const {rank,check,count,rankedStudents} =acc;
     const {total} = student;
     const updatedRank=check!=total?count:rank;
@@ -42,7 +42,7 @@ const generateMarksheet = (students)=>{
     },{rank:1,check:0,count:1,rankedStudents:[]});
   
   console.table(rankedStudents.concat(failedStudents));
-  console.log(`passed count ${passedStudents.length} failed count ${failedStudents.length}`);  
+  console.log(`passed count ${count(sortedStudents)} failed count ${count(failedStudents)}`);  
 };
 
 generateMarksheet(students);
