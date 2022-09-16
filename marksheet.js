@@ -37,4 +37,3 @@ let studentStatistics=[]
 collection.combine(studentStatistics,passStatistics,failStatistics)
 console.table(studentStatistics)
 console.log(`passed count ${passStatistics.length} failed count ${failStatistics.length}`)
-
