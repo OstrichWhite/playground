@@ -21,28 +21,32 @@ const assignResult = (students)=>
     };
   });
 
-
-const generateMarksheet = (students)=>{
-  const studentResults= assignResult(students);
-  const {pass:passedStudents,fail:failedStudents}=index(studentResults,['result']);
+const assignRank = (passedStudents)=>{
   const sortedStudents=sort(passedStudents,(a,b)=>b.total-a.total);
 
-  const {rankedStudents} = reduce(sortedStudents,(acc,student,i)=>{ 
+  return reduce(sortedStudents,(acc,student,i)=>{ 
     const {rank,check,count,rankedStudents} =acc;
     const {total} = student;
     const updatedRank=check!=total?count:rank;
+
+    return {
+      ...acc,
+      check:check!=total?total:check,
+      count:count+1,
+      rank:updatedRank,
+      rankedStudents:[...rankedStudents,{...student,rank:updatedRank}],
+    };
+  },{rank:1,check:0,count:1,rankedStudents:[]});
+}
   
-      return {
-        ...acc,
-        check:check!=total?total:check,
-        count:count+1,
-        rank:updatedRank,
-        rankedStudents:[...rankedStudents,{...student,rank:updatedRank}],
-      };
-    },{rank:1,check:0,count:1,rankedStudents:[]});
+  const generateMarksheet = (students)=>{
+  const studentResults= assignResult(students);
+  const {pass:passedStudents,fail:failedStudents}=index(studentResults,['result']);
+
+  const {rankedStudents} = assignRank(passedStudents);
   
   console.table(rankedStudents.concat(failedStudents));
-  console.log(`passed count ${count(sortedStudents)} failed count ${count(failedStudents)}`);  
+  console.log(`passed count ${count(passedStudents)} failed count ${count(failedStudents)}`);  
 };
 
 generateMarksheet(students);
