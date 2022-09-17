@@ -61,8 +61,17 @@ const updateBalance = (trans) => (trans.type==='withdrawal')
 const displayBalance = () => accounts.map(e=>{ return { Name : e.name, Account : e.accountNo, Balance : getBalance(e.accountNo)} })  
 // const displayBalance = () => accounts.map(getBalance)  
 
-console.log('Before Update Balance')
-console.table(displayBalance())
-transactions.map(updateBalance)
-console.log('After Update Balance')
-console.table(displayBalance())
+const displayAccount = (accounts,balances,transactions) => {
+  console.log('Before Update Balance')
+  console.table(displayBalance())
+  transactions.map(updateBalance)
+  console.log('After Update Balance')
+  console.table(displayBalance())
+}
+
+
+const main = () => {
+  displayAccount(accounts,balances,transactions)
+}
+
+main()
