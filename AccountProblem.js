@@ -54,9 +54,13 @@ const transactions = [
 const getBalance = (accountNo) => balances[accountNo];
 // const getBalance = (account) =>{ return { Name:account.name, Account:account.accountNo, Balance:balances[account.accountNo]} }
 
-const updateBalance = (trans) => (trans.type==='withdrawal')
-  ?balances[trans.accountNo]-=trans.amount
-  :balances[trans.accountNo]+=trans.amount;
+const updateBalance = (transaction) => {
+  const updateBalanceConditions = {
+    withdrawal: ()=> balances[transaction.accountNo]-=transaction.amount,
+    deposit: ()=> balances[transaction.accountNo]+=transaction.amount,
+  };
+  return updateBalanceConditions[transaction.type]();
+};
 
 const displayBalance = () => accounts.map(e=>{ return { Name : e.name, Account : e.accountNo, Balance : getBalance(e.accountNo)} })  
 // const displayBalance = () => accounts.map(getBalance)  
