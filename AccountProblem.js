@@ -1,3 +1,4 @@
+const { map } = require('@laufire/utils/collection')
 const accounts = [
   { name: 'Babu', accountNo: 2 },
   { name: 'Chandra', accountNo: 3 },
@@ -15,19 +16,18 @@ const transactions = [
 
 const displayBalance = (data) => {
   const { accounts,balances } = data;
-  return accounts
-    .map((account) =>{ 
-      return { 
-        Name:account.name, 
-        'Account No':account.accountNo, 
-        Balance:balances[account.accountNo],
-      }; 
-    });  
+  return map(accounts,(account) =>{ 
+    return { 
+      Name:account.name, 
+      'Account No':account.accountNo, 
+      Balance:balances[account.accountNo],
+    }; 
+  });  
 };
 
 const updateBalance = (data) => {
   const{ balances,transactions } = data;
-  transactions.map((transaction) => {
+  map(transactions,(transaction) => {
     const updateBalanceConditions = {
       withdrawal: ()=> balances[transaction.accountNo]-=transaction.amount,
       deposit: ()=> balances[transaction.accountNo]+=transaction.amount,
