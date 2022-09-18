@@ -1,79 +1,47 @@
 const accounts = [
-  {
-    name: 'Babu',
-    accountNo: 2,
-  },
-  {
-    name: 'Chandra',
-    accountNo: 3,
-  },
-  {
-    name: 'Arun',
-    accountNo: 1,
-  },
+  { name: 'Babu', accountNo: 2 },
+  { name: 'Chandra', accountNo: 3 },
+  { name: 'Arun', accountNo: 1 },
 ];
-const balances = {
-  //accountNo: balance
-  '1': 5000,
-  '2': 2000,
-  '3': 0,
-};
+const balances = { '1': 5000, '2': 2000, '3': 0 }; //accountNo: balance
 const transactions = [
-  {
-    accountNo: 1,
-    type: 'withdrawal',
-    amount: 1000,
-  },
-  {
-    accountNo: 1,
-    type: 'deposit',
-    amount: 500,
-  },
-  {
-    accountNo: 1,
-    type: 'withdrawal',
-    amount: 1000,
-  },
-  {
-    accountNo: 2,
-    type: 'deposit',
-    amount: 300,
-  },
-  {
-    accountNo: 2,
-    type: 'withdrawal',
-    amount: 200,
-  },
-  {
-    accountNo: 2,
-    type: 'deposit',
-    amount: 200,
-  },
+  { accountNo: 1, type: 'withdrawal', amount: 1000 },
+  { accountNo: 1, type: 'deposit', amount: 500 },
+  { accountNo: 1, type: 'withdrawal', amount: 1000 },
+  { accountNo: 2, type: 'deposit', amount: 300 },
+  { accountNo: 2, type: 'withdrawal', amount: 200 },
+  { accountNo: 2, type: 'deposit', amount: 200 },
 ];
 
-const getBalance = (accountNo) => balances[accountNo];
-// const getBalance = (account) =>{ return { Name:account.name, Account:account.accountNo, Balance:balances[account.accountNo]} }
-
-const displayBalance = () => accounts.map(e=>{ return { Name : e.name, Account : e.accountNo, Balance : getBalance(e.accountNo)} })  
-// const displayBalance = () => accounts.map(getBalance)  
+const displayBalance = (data) => {
+  const { accounts,balances } = data;
+  return accounts
+    .map((account) =>{ 
+      return { 
+        Name:account.name, 
+        'Account No':account.accountNo, 
+        Balance:balances[account.accountNo],
+      }; 
+    });  
+};
 
 const updateBalance = (data) => {
-  const{ balances,transactions } = data
+  const{ balances,transactions } = data;
   transactions.map((transaction) => {
     const updateBalanceConditions = {
       withdrawal: ()=> balances[transaction.accountNo]-=transaction.amount,
       deposit: ()=> balances[transaction.accountNo]+=transaction.amount,
     };
-    return updateBalanceConditions[transaction.type]();
+    updateBalanceConditions[transaction.type]();
   })
 }
 
 const displayAccountsReport = (data) => {
   console.log('Before Update Balance')
-  console.table(displayBalance())
+  console.table(displayBalance(data))
   updateBalance(data)
   console.log('After Update Balance')
-  console.table(displayBalance())
+  console.table(displayBalance(data))
 };
 
 const main = () => {
