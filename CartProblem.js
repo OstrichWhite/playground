@@ -30,22 +30,44 @@ const purchases = [
   },
 ];
 /* Functions */
-const getDiscountPercent = (productName) => (discounts[productName] || 0) /100 
-const getTaxPercent = (productName) => (taxes[productName] || 0) /100
+const getDiscountPercent = (discounts,productName) => (discounts[productName] || 0) /100 
+const getTaxPercent = (taxes,productName) => (taxes[productName] || 0) /100
 
-const getUnitPrice = (itemName) => {
-  const rate = rates[itemName]
-  const discount=rate*getDiscountPercent(itemName)
-  const tax=rate*getTaxPercent(itemName)
-  return rate-discount+tax
+const getUnitPrice = (data) => {
+  const {rates, discounts, taxes, purchases} = data
+  const newPurchase = purchases.map(purchase=>{
+    const rate = rates[purchase.item]
+    const discount=rate*getDiscountPercent(discounts,purchase.item)
+    const tax=rate*getTaxPercent(taxes,purchase.item)
+    return { 
+      ...purchase,
+      unitPrice:rate-discount+tax,
+    }
+  })
+  return {rates, discounts, taxes, purchases: newPurchase}
 }
-const getLineItemPrice = (lineItem) => lineItem.units*getUnitPrice(lineItem.item)
-const getSum = () => purchases.map(getLineItemPrice).reduce((a,b)=>a+b,0);
+const getLineItemPrice = (data) =>{
+  const {rates, discounts, taxes, purchases} = data;
+  const newPurchase = purchases.map(purchase=>{
+    return{
+      ...purchase,
+      itemPrice:purchase.units*purchase.unitPrice,
+    }
+  })
+  return {rates, discounts, taxes, purchases: newPurchase}
+} 
+const getSum = (data) => {
+  const { purchases } =data
+  let sum=purchases.reduce((a,b)=> {
+    return {itemPrice: a.itemPrice+b.itemPrice}
+  });
+  return sum.itemPrice
+}
 
 // Do not change below this line.
 /* Main Function */
 const main = function main() {
-  console.log(getSum());
+  console.log(getSum(getLineItemPrice(getUnitPrice({rates, discounts, taxes, purchases}))));
 }
 
 main();
