@@ -1,33 +1,12 @@
+const { map,reduce } = require('@laufire/utils/collection')
 /* Data */
-const rates = {
-  Carrot: 10,
-  Apple: 200,
-  Guava: 50,
-};
-
-const discounts = {
-  // values are in percentages.
-  Apple: 10,
-};
-
-const taxes = {
-  // values are in percentages.
-  Carrot: 5,
-  Guava: 10,
-};
+const rates = { Carrot: 10, Apple: 200, Guava: 50 };
+const discounts = { Apple: 10 }; // values are in percentages.
+const taxes = { Carrot: 5, Guava: 10 }; // values are in percentages.
 const purchases = [
-  {
-    item: 'Carrot',
-    units: 20,
-  },
-  {
-    item: 'Apple',
-    units: 2,
-  },
-  {
-    item: 'Guava',
-    units: 1,
-  },
+  { item: 'Carrot', units: 20 },
+  { item: 'Apple', units: 2, },
+  { item: 'Guava', units: 1, },
 ];
 /* Functions */
 const getDiscountPercent = (discounts,productName) => (discounts[productName] || 0) /100 
@@ -35,7 +14,7 @@ const getTaxPercent = (taxes,productName) => (taxes[productName] || 0) /100
 
 const getUnitPrice = (data) => {
   const {rates, discounts, taxes, purchases} = data
-  const newPurchase = purchases.map(purchase=>{
+  const newPurchase = map(purchases,purchase=>{
     const rate = rates[purchase.item]
     const discount=rate*getDiscountPercent(discounts,purchase.item)
     const tax=rate*getTaxPercent(taxes,purchase.item)
@@ -48,7 +27,7 @@ const getUnitPrice = (data) => {
 }
 const getLineItemPrice = (data) =>{
   const {rates, discounts, taxes, purchases} = data;
-  const newPurchase = purchases.map(purchase=>{
+  const newPurchase = map(purchases,purchase=>{
     return{
       ...purchase,
       itemPrice:purchase.units*purchase.unitPrice,
@@ -58,9 +37,9 @@ const getLineItemPrice = (data) =>{
 } 
 const getSum = (data) => {
   const { purchases } =data
-  let sum=purchases.reduce((a,b)=> {
+  let sum=reduce(purchases,(a,b)=> {
     return {itemPrice: a.itemPrice+b.itemPrice}
-  });
+  },{itemPrice:0});
   return sum.itemPrice
 }
 
