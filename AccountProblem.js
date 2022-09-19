@@ -29,9 +29,11 @@ const displayBalance = (data) => {
 const doTransactions = (data) => {
   const{ balances,transactions,accounts } = data;
   map(transactions,(transaction) => {
-    (transaction.type === 'withdrawal')
-      ?balances[transaction.accountNo]-=transaction.amount
-      :balances[transaction.accountNo]+=transaction.amount
+    const transactionType = {
+      withdrawal: ()=>balances[transaction.accountNo]-=transaction.amount,
+      deposit: ()=>balances[transaction.accountNo]+=transaction.amount
+    }
+    transactionType[transaction.type]()
   })
   return {balances,transactions,accounts}
 }
@@ -43,8 +45,4 @@ const displayTransactionReport = (data) => {
   console.table(displayBalance(doTransactions(data)))
 };
 
-const main = () => {
   displayTransactionReport({accounts,balances,transactions});
-};
-
-main();
